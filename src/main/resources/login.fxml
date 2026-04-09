@@ -11,7 +11,7 @@
       fx:controller="org.example.controller.LoginController"
       prefWidth="400" prefHeight="500">
 
-    <Label text="P2P Chat Login" styleClass="title-label"/>
+    <Label text="Login" styleClass="title-label"/>
 
     <VBox spacing="10" maxWidth="250">
         <Label text="Tên hiển thị:" />

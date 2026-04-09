@@ -10,8 +10,7 @@ public class Main extends Application {
 
         @Override
         public void start(Stage primaryStage) throws Exception {
-            // Tải file giao diện Login.fxml từ thư mục resources
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
 
             // Tạo Scene với kích thước khớp với thiết kế trong FXML
@@ -20,9 +19,11 @@ public class Main extends Application {
             // Thiết lập Stage (Cửa sổ ứng dụng)
             primaryStage.setTitle("Eira Chat App");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false); // Khóa kích thước cửa sổ đăng nhập cho đẹp
 
-            // Hiển thị ở giữa màn hình
+            primaryStage.setResizable(true);
+            primaryStage.setMinWidth(400);
+            primaryStage.setMinHeight(500);
+
             primaryStage.centerOnScreen();
             primaryStage.show();
         }
