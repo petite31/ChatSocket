@@ -3,15 +3,16 @@ module org.example.chatsocket {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
+    requires java.sql; // Gson đôi khi cần thư viện này ngầm để parse ngày tháng
 
-    // 2. Cho phép JavaFX truy cập vào các file Controller để tiêm (inject) các biến @FXML
-    opens org.example.controller to javafx.fxml;
+    // Cấp quyền cho JavaFX truy cập (Reflection) vào các file giao diện
     opens org.example to javafx.fxml;
+    opens org.example.controller to javafx.fxml;
 
-    // 3. Cho phép thư viện Gson truy xuất vào class Model để chuyển đổi JSON (Lưu/Đọc tài khoản)
+    // Cấp quyền cho Gson tự do đóng/mở gói các Object Model thành file JSON
     opens org.example.model to com.google.gson;
 
-    // 4. Xuất (Export) các package để các module khác (như JavaFX) có thể nhìn thấy
+    // Xuất các gói để JVM có thể nhìn thấy
     exports org.example;
     exports org.example.controller;
     exports org.example.model;
