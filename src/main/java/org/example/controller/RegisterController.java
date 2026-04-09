@@ -57,10 +57,10 @@ public class RegisterController {
     @FXML
     private void goToLogin(ActionEvent event) throws IOException {
         // Tải lại màn hình Login.fxml
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 400, 500));
-        stage.setTitle("P2P Chat - Đăng nhập");
+        stage.setTitle("Đăng nhập");
         stage.centerOnScreen();
     }
 

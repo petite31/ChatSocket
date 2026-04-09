@@ -32,7 +32,7 @@ public class LoginController {
             String myIP = InetAddress.getLocalHost().getHostAddress(); // Lấy IP máy hiện tại
 
             // Chuyển sang màn hình Dashboard và truyền dữ liệu
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
             Parent root = loader.load();
 
             DashboardController dashboard = loader.getController();
@@ -51,7 +51,7 @@ public class LoginController {
     @FXML
     private void goToRegister(ActionEvent event) throws IOException {
         // Trong P2P thực tế có thể bỏ qua bước này, nhưng làm theo yêu cầu của bạn
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Register.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Register.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 400, 500));
     }

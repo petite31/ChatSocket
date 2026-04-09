@@ -2,11 +2,16 @@ package org.example.controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.example.network.*;
@@ -15,9 +20,11 @@ import org.example.model.*;
 public class DashboardController {
 
     @FXML private Label lblMyInfo;
+    @FXML private TextArea txtGroupIPs;
     @FXML private TextField txtTargetIP;
     @FXML private TextField txtTargetPort;
-    @FXML private TextArea chatArea;
+    @FXML private ScrollPane chatScroll;
+    @FXML private VBox chatBox;
     @FXML private TextField txtMessage;
 
     private String myIP;
@@ -25,35 +32,75 @@ public class DashboardController {
     private int myPort;
     private PeerServer server;
 
-    // Giả lập danh sách IP trong mạng LAN (dành cho tính năng net send *)
-    private final List<String> groupIPs = Arrays.asList("127.0.0.1", "192.168.1.5");
-
-    // Hàm này được gọi từ LoginController
     public void initData(String username, String myIP, int myPort) {
         this.username = username;
         this.myIP = myIP;
         this.myPort = myPort;
-
         lblMyInfo.setText("Tên: " + username + "\nIP: " + myIP + "\nPort: " + myPort);
 
-        // Khởi động Server lắng nghe tin nhắn đến
+        // Tự động cuộn xuống cuối khi có tin nhắn mới
+        chatBox.heightProperty().addListener((observable, oldValue, newValue) -> chatScroll.setVvalue(1.0));
+
         startServer();
+    }
+
+    // --- HÀM VẼ BONG BÓNG CHAT ---
+    private void addMessageBubble(String sender, String message, boolean isMine) {
+        HBox container = new HBox();
+        container.setPrefWidth(chatBox.getWidth());
+
+        Label bubble = new Label(message);
+        bubble.setWrapText(true);
+        bubble.getStyleClass().add("message-bubble");
+
+        if (isMine) {
+            // Tin nhắn của mình: Nằm bên phải, màu xanh
+            container.setAlignment(Pos.CENTER_RIGHT);
+            bubble.getStyleClass().add("message-mine");
+            container.getChildren().add(bubble);
+        } else {
+            // Tin nhắn người khác: Nằm bên trái, màu trắng
+            container.setAlignment(Pos.CENTER_LEFT);
+            bubble.getStyleClass().add("message-theirs");
+
+            VBox wrapper = new VBox();
+            Label nameLabel = new Label(sender);
+            nameLabel.getStyleClass().add("sender-name");
+            wrapper.getChildren().addAll(nameLabel, bubble);
+
+            container.getChildren().add(wrapper);
+        }
+
+        chatBox.getChildren().add(container);
     }
 
     private void startServer() {
         server = new PeerServer(myPort, packet -> {
-            // Cập nhật UI phải dùng Platform.runLater
             Platform.runLater(() -> {
                 if (packet.getType() == MessagePacket.Type.TEXT) {
-                    chatArea.appendText("[" + packet.getSenderIP() + "] " + packet.getSenderName() + ": " + packet.getTextContent() + "\n");
+                    addMessageBubble(packet.getSenderName(), packet.getTextContent(), false);
                 } else {
-                    chatArea.appendText("[" + packet.getSenderIP() + "] " + packet.getSenderName() + " đã gửi file: " + packet.getFileName() + " (Đã lưu vào thư mục Downloads_P2P)\n");
+                    addMessageBubble(packet.getSenderName(), "Đã gửi một file: " + packet.getFileName(), false);
                 }
             });
         });
-        server.setDaemon(true); // Để thread tự tắt khi đóng ứng dụng
+        server.setDaemon(true);
         server.start();
-        chatArea.appendText("=== Hệ thống đang lắng nghe tại cổng " + myPort + " ===\n");
+
+        // Lời chào hệ thống
+        Platform.runLater(() -> {
+            Label sysMsg = new Label("=== Đã sẵn sàng kết nối tại cổng " + myPort + " ===");
+            sysMsg.setStyle("-fx-text-fill: gray; -fx-font-size: 12px;");
+            HBox sysBox = new HBox(sysMsg);
+            sysBox.setAlignment(Pos.CENTER);
+            chatBox.getChildren().add(sysBox);
+        });
+    }
+
+    private List<String> getActiveGroupIPs() {
+        String rawIPs = txtGroupIPs.getText().trim();
+        if (rawIPs.isEmpty()) return new ArrayList<>();
+        return Arrays.asList(rawIPs.split("\\s*,\\s*"));
     }
 
     @FXML
@@ -68,14 +115,15 @@ public class DashboardController {
         PeerClient client = new PeerClient(myIP, username, targetPort);
 
         if (targetIP.equals("*")) {
-            // Gửi cho tất cả máy (net send *)
-            client.sendTextToGroup(groupIPs, message);
-            chatArea.appendText("[Tôi -> Mọi người]: " + message + "\n");
+            List<String> groupList = getActiveGroupIPs();
+            if (groupList.isEmpty()) return;
+            client.sendTextToGroup(groupList, message);
         } else {
-            // Gửi cá nhân
             client.sendText(targetIP, message);
-            chatArea.appendText("[Tôi -> " + targetIP + ":" + targetPort + "]: " + message + "\n");
         }
+
+        // Vẽ tin nhắn lên màn hình của mình
+        addMessageBubble(username, message, true);
         txtMessage.clear();
     }
 
@@ -84,21 +132,25 @@ public class DashboardController {
         String targetIP = txtTargetIP.getText().trim();
         String targetPortStr = txtTargetPort.getText().trim();
 
-        if (targetIP.isEmpty() || targetIP.equals("*") || targetPortStr.isEmpty()) {
-            chatArea.appendText("Vui lòng nhập chính xác IP và Port đích để gửi file (Không hỗ trợ gửi file cho group *).\n");
-            return;
-        }
+        if (targetIP.isEmpty() || targetPortStr.isEmpty()) return;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Chọn file để gửi");
         File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
             int targetPort = Integer.parseInt(targetPortStr);
             PeerClient client = new PeerClient(myIP, username, targetPort);
 
-            client.sendFile(targetIP, file, false);
-            chatArea.appendText("[Tôi -> " + targetIP + "]: Đang gửi file " + file.getName() + "...\n");
+            if (targetIP.equals("*")) {
+                for (String ip : getActiveGroupIPs()) {
+                    client.sendFile(ip, file, false, null); // Thêm hiệu ứng
+                }
+            } else {
+                client.sendFile(targetIP, file, false, null);
+            }
+
+            // Hiện tin nhắn file lên màn hình của mình
+            addMessageBubble(username, "Bạn đã gửi file:\n" + file.getName(), true);
         }
     }
 }

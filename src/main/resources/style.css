@@ -51,3 +51,44 @@
     -fx-font-size: 15px;
     -fx-border-color: transparent;
 }
+
+/* --- Khung cuộn Chat --- */
+.chat-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.chat-scroll-pane .viewport {
+    -fx-background-color: #F8FBFF; /* Xanh cực nhạt để làm nền phòng chat */
+}
+
+/* --- Bong bóng tin nhắn --- */
+.message-bubble {
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 18px;
+    -fx-font-size: 14px;
+    -fx-max-width: 400px;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+/* Tin nhắn của mình (Bên phải) */
+.message-mine {
+    -fx-background-color: #64B5F6; /* Xanh pastel */
+    -fx-text-fill: white;
+}
+
+/* Tin nhắn người khác (Bên trái) */
+.message-theirs {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #333333;
+    -fx-border-color: #E3F2FD;
+    -fx-border-radius: 18px;
+}
+
+/* Tên người gửi nhỏ ở trên tin nhắn đến */
+.sender-name {
+    -fx-font-size: 11px;
+    -fx-text-fill: #90CAF9;
+    -fx-padding: 0 0 2 5;
+}

@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.TextArea?>
+
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane stylesheets="style.css" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.controller.DashboardController">
@@ -15,23 +17,30 @@
             <Label text="Thông tin của bạn" style="-fx-font-weight: bold; -fx-text-fill: #0D47A1;"/>
             <Label fx:id="lblMyInfo" text="IP: \nPort: " wrapText="true"/>
 
-            <Label text="Kết nối đến:" style="-fx-font-weight: bold; -fx-margin-top: 20;"/>
-            <TextField fx:id="txtTargetIP" promptText="Nhập IP đích (hoặc * để gửi all)"/>
-            <TextField fx:id="txtTargetPort" promptText="Nhập Port đích (VD: 5000)" text="5000"/>
+            <Label text="Tạo Group:" style="-fx-font-weight: bold; -fx-margin-top: 20;"/>
+            <Label text="Cách nhau bởi dấu phẩy" style="-fx-font-size: 11px; -fx-text-fill: #555;"/>
+            <TextArea fx:id="txtGroupIPs" promptText="VD: 192.168.1.5, 10.0.0.2" prefRowCount="3" wrapText="true"/>
+
+            <Label text="Kết nối đến:" style="-fx-font-weight: bold; -fx-margin-top: 10;"/>
+            <TextField fx:id="txtTargetIP" promptText="Nhập IP đích (hoặc * để gửi group)"/>
+            <TextField fx:id="txtTargetPort" promptText="Nhập Port đích" />
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="10" style="-fx-padding: 20;">
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #F8FBFF;">
             <Label text="Phòng Chat" styleClass="title-label"/>
 
-            <TextArea fx:id="chatArea" editable="false" VBox.vgrow="ALWAYS" styleClass="chat-area"/>
+            <ScrollPane fx:id="chatScroll" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-scroll-pane" hbarPolicy="NEVER">
+                <VBox fx:id="chatBox" spacing="12" style="-fx-padding: 10 20 10 10; -fx-background-color: transparent;"/>
+            </ScrollPane>
 
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="txtMessage" promptText="Nhập tin nhắn..." HBox.hgrow="ALWAYS" onAction="#handleSendMessage"/>
+            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                <TextField fx:id="txtMessage" promptText="Nhập tin nhắn..." HBox.hgrow="ALWAYS" onAction="#handleSendMessage" style="-fx-pref-height: 40px; -fx-background-radius: 20;"/>
                 <Button text="Gửi File" onAction="#handleSendFile" styleClass="button-secondary"/>
                 <Button text="Gửi" onAction="#handleSendMessage"/>
             </HBox>
         </VBox>
     </center>
+
 </BorderPane>

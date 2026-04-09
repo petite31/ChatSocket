@@ -11,7 +11,7 @@ public class Main extends Application {
         @Override
         public void start(Stage primaryStage) throws Exception {
             // Tải file giao diện Login.fxml từ thư mục resources
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
 
             // Tạo Scene với kích thước khớp với thiết kế trong FXML
