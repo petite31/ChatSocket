@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.PasswordField?>
+<VBox alignment="CENTER" spacing="15" stylesheets="style.css"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controller.RegisterController"
+      prefWidth="400" prefHeight="500">
+
+    <Label text="Tạo Hồ Sơ P2P" styleClass="title-label"/>
+    <Label text="Đăng ký thông tin máy trạm của bạn" style="-fx-text-fill: #64B5F6; -fx-font-size: 14px; -fx-padding: 0 0 10 0;"/>
+
+    <VBox spacing="10" maxWidth="250">
+        <Label text="Tên hiển thị:" />
+        <TextField fx:id="txtRegUsername" promptText="Nhập tên của bạn..." />
+
+        <Label text="Mật khẩu (Tùy chọn):" />
+        <PasswordField fx:id="txtRegPassword" promptText="Nhập mật khẩu bảo vệ..." />
+
+        <Label text="Port mặc định:" />
+        <TextField fx:id="txtRegPort" text="5000" promptText="VD: 5000" />
+    </VBox>
+
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Hoàn Tất Đăng Ký" onAction="#handleRegister" prefWidth="250"/>
+        <Button text="Quay lại Đăng nhập" styleClass="button-secondary" onAction="#goToLogin" prefWidth="250"/>
+    </VBox>
+
+</VBox>

@@ -1,0 +1,53 @@
+.root {
+    -fx-background-color: #E3F2FD;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Tiêu đề */
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565C0;
+}
+
+/* Text Field & Text Area */
+.text-field, .text-area, .password-field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #90CAF9;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #1E88E5;
+    -fx-border-width: 2px;
+}
+
+/* Nút bấm (Button) */
+.button {
+    -fx-background-color: #64B5F6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #42A5F5;
+}
+.button-secondary {
+    -fx-background-color: #BBDEFB;
+    -fx-text-fill: #0D47A1;
+}
+.button-secondary:hover {
+    -fx-background-color: #90CAF9;
+}
+
+/* Khung Chat */
+.chat-area {
+    -fx-control-inner-background: #FFFFFF;
+    -fx-font-size: 15px;
+    -fx-border-color: transparent;
+}
